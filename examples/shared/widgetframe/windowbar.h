@@ -1,6 +1,6 @@
-// Copyright (C) 2023-2024 Stdware Collections (https://www.github.com/stdware)
-// Copyright (C) 2021-2023 wangwenx190 (Yuhang Zhao)
-// SPDX-License-Identifier: Apache-2.0
+
+
+
 
 #ifndef WINDOWBAR_H
 #define WINDOWBAR_H
@@ -46,6 +46,24 @@ namespace QWK {
         QAbstractButton *takeMaxButton();
         QAbstractButton *takeCloseButton();
 
+        QWidget *centerWidget() const;
+        void setCenterWidget(QWidget *widget);
+        QWidget *takeCenterWidget();
+
+        QAbstractButton *backButton() const;
+        void setBackButton(QAbstractButton *btn);
+        QAbstractButton *takeBackButton();
+
+        QAbstractButton *homeButton() const;
+        void setHomeButton(QAbstractButton *btn);
+        QAbstractButton *takeHomeButton();
+
+        QAbstractButton *favButton() const;
+        void setFavButton(QAbstractButton *btn);
+        QAbstractButton *takeFavButton();
+
+
+
         QWidget *hostWidget() const;
         void setHostWidget(QWidget *w);
 
@@ -75,4 +93,4 @@ namespace QWK {
 
 }
 
-#endif // WINDOWBAR_H
+#endif 

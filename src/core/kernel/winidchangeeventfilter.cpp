@@ -1,10 +1,8 @@
-// Copyright (C) 2023-2024 Stdware Collections (https://www.github.com/stdware)
-// Copyright (C) 2021-2023 wangwenx190 (Yuhang Zhao)
-// SPDX-License-Identifier: Apache-2.0
+
+
+
 
 #include "winidchangeeventfilter_p.h"
-
-#include <QtGui/qpa/qplatformwindow.h>
 
 #include "abstractwindowcontext_p.h"
 
@@ -20,8 +18,8 @@ namespace QWK {
         auto win = static_cast<QWindow *>(host);
         if (isAboutToBeDestroyed)
             return 0;
-        if (auto platformWindow = win->handle())
-            return platformWindow->winId();
+        if (win->handle())
+            return win->winId();
         return 0;
     }
 

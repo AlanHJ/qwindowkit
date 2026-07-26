@@ -1,6 +1,6 @@
-// Copyright (C) 2023-2024 Stdware Collections (https://www.github.com/stdware)
-// Copyright (C) 2021-2023 wangwenx190 (Yuhang Zhao)
-// SPDX-License-Identifier: Apache-2.0
+
+
+
 
 #include "windowbar.h"
 #include "windowbar_p.h"
@@ -120,7 +120,7 @@ namespace QWK {
         d->setWidgetAt(WindowBarPrivate::TitleLabel, label);
         if (d->autoTitle && d->w)
             label->setText(d->w->windowTitle());
-        label->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
+        label->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
     }
 
     void WindowBar::setIconButton(QAbstractButton *btn) {
@@ -232,6 +232,107 @@ namespace QWK {
             return nullptr;
         }
         disconnect(btn, &QAbstractButton::clicked, this, &WindowBar::closeRequested);
+        return btn;
+    }
+
+    QWidget *WindowBar::centerWidget() const {
+        Q_D(const WindowBar);
+        return d->widgetAt(WindowBarPrivate::CenterWidget);
+    }
+
+    void WindowBar::setCenterWidget(QWidget *widget) {
+        Q_D(WindowBar);
+        auto org = takeCenterWidget();
+        if (org)
+            org->deleteLater();
+        if (!widget)
+            return;
+        d->setWidgetAt(WindowBarPrivate::CenterWidget, widget);
+    }
+
+    QWidget *WindowBar::takeCenterWidget() {
+        Q_D(WindowBar);
+        return d->takeWidgetAt(WindowBarPrivate::CenterWidget);
+    }
+
+    QAbstractButton *WindowBar::backButton() const
+    {
+        Q_D(const WindowBar);
+        return static_cast<QAbstractButton *>(d->widgetAt(WindowBarPrivate::BackButton));
+    }
+
+    void WindowBar::setBackButton(QAbstractButton *btn)
+    {
+        Q_D(WindowBar);
+        auto org = takeBackButton();
+        if (org)
+            org->deleteLater();
+        if (!btn)
+            return;
+        d->setWidgetAt(WindowBarPrivate::BackButton, btn);
+    }
+
+    QAbstractButton *WindowBar::takeBackButton()
+    {
+        Q_D(WindowBar);
+        auto btn = static_cast<QAbstractButton *>(d->takeWidgetAt(WindowBarPrivate::BackButton));
+        if (!btn) {
+            return nullptr;
+        }
+        return btn;
+    }
+
+    QAbstractButton *WindowBar::homeButton() const
+    {
+        Q_D(const WindowBar);
+        return static_cast<QAbstractButton *>(d->widgetAt(WindowBarPrivate::HomeButton));
+    }
+
+    void WindowBar::setHomeButton(QAbstractButton *btn)
+    {
+        Q_D(WindowBar);
+        auto org = takeHomeButton();
+        if (org)
+            org->deleteLater();
+        if (!btn)
+            return;
+        d->setWidgetAt(WindowBarPrivate::HomeButton, btn);
+    }
+
+    QAbstractButton *WindowBar::takeHomeButton()
+    {
+        Q_D(WindowBar);
+        auto btn = static_cast<QAbstractButton *>(d->takeWidgetAt(WindowBarPrivate::HomeButton));
+        if (!btn) {
+            return nullptr;
+        }
+        return btn;
+    }
+
+    QAbstractButton *WindowBar::favButton() const
+    {
+        Q_D(const WindowBar);
+        return static_cast<QAbstractButton *>(d->widgetAt(WindowBarPrivate::FavButton));
+    }
+
+    void WindowBar::setFavButton(QAbstractButton *btn)
+    {
+        Q_D(WindowBar);
+        auto org = takeFavButton();
+        if (org)
+            org->deleteLater();
+        if (!btn)
+            return;
+        d->setWidgetAt(WindowBarPrivate::FavButton, btn);
+    }
+
+    QAbstractButton *WindowBar::takeFavButton()
+    {
+        Q_D(WindowBar);
+        auto btn = static_cast<QAbstractButton *>(d->takeWidgetAt(WindowBarPrivate::FavButton));
+        if (!btn) {
+            return nullptr;
+        }
         return btn;
     }
 

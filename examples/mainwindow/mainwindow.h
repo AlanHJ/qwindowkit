@@ -1,6 +1,6 @@
-// Copyright (C) 2023-2024 Stdware Collections (https://www.github.com/stdware)
-// Copyright (C) 2021-2023 wangwenx190 (Yuhang Zhao)
-// SPDX-License-Identifier: Apache-2.0
+
+
+
 
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
@@ -39,4 +39,4 @@ private:
     QWK::WidgetWindowAgent *windowAgent;
 };
 
-#endif // MAINWINDOW_H
+#endif 

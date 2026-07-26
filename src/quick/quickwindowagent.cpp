@@ -1,6 +1,6 @@
-// Copyright (C) 2023-2024 Stdware Collections (https://www.github.com/stdware)
-// Copyright (C) 2021-2023 wangwenx190 (Yuhang Zhao)
-// SPDX-License-Identifier: Apache-2.0
+
+
+
 
 #include "quickwindowagent.h"
 #include "quickwindowagent_p.h"
@@ -12,13 +12,7 @@
 
 namespace QWK {
 
-    /*!
-        \class QuickWindowAgent
-        \brief QuickWindowAgent is the window agent for QtQuick.
-
-        It provides interfaces for QtQuick and processes some Qt events related to the QQuickItem
-        instance. The usage of all APIs is consistent with the \a Widgets module.
-    */
+    
 
     QuickWindowAgentPrivate::QuickWindowAgentPrivate() = default;
 
@@ -96,9 +90,7 @@ namespace QWK {
         d->context->setHitTestVisible(item, visible);
     }
 
-    /*!
-        \internal
-    */
+    
     QuickWindowAgent::QuickWindowAgent(QuickWindowAgentPrivate &d, QObject *parent)
         : WindowAgentBase(d, parent) {
         d.init();

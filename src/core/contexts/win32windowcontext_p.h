@@ -1,18 +1,18 @@
-// Copyright (C) 2023-2024 Stdware Collections (https://www.github.com/stdware)
-// Copyright (C) 2021-2023 wangwenx190 (Yuhang Zhao)
-// SPDX-License-Identifier: Apache-2.0
+
+
+
 
 #ifndef WIN32WINDOWCONTEXT_P_H
 #define WIN32WINDOWCONTEXT_P_H
 
-//
-//  W A R N I N G !!!
-//  -----------------
-//
-// This file is not part of the QWindowKit API. It is used purely as an
-// implementation detail. This header file may change from version to
-// version without notice, or may even be removed.
-//
+
+
+
+
+
+
+
+
 
 #include <QWKCore/qwindowkit_windows.h>
 #include <QWKCore/private/abstractwindowcontext_p.h>
@@ -51,10 +51,10 @@ namespace QWK {
         bool systemMenuHandler(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam,
                                LRESULT *result);
 
-        // In order to perfectly apply Windows 11 Snap Layout into the Qt window, we need to
-        // intercept and emulate most of the  mouse events, so that the processing logic
-        // is quite complex. Simultaneously, in order to make the handling code of other
-        // Windows messages clearer, we have separated them into this function.
+        
+        
+        
+        
         bool snapLayoutHandler(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam,
                                LRESULT *result);
 
@@ -65,22 +65,19 @@ namespace QWK {
                                       LRESULT *result);
 
     protected:
-        // The last hit test result, helpful to handle WM_MOUSEMOVE and WM_NCMOUSELEAVE.
+        
         WindowPart lastHitTestResult = WindowPart::Outside;
         int lastHitTestResultRaw = HTNOWHERE;
 
-        // Whether the last mouse leave message is blocked, mainly for handling the unexpected
-        // WM_MOUSELEAVE.
+        
+        
         bool mouseLeaveBlocked = false;
 
-        // For emulating traditional icon button behavior
+        
         uint64_t iconButtonClickTime = 0;
         int iconButtonClickLevel = 0;
-
-        // Attributes
-        bool noSystemMenu = false;
     };
 
 }
 
-#endif // WIN32WINDOWCONTEXT_P_H
+#endif 

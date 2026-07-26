@@ -1,6 +1,6 @@
-// Copyright (C) 2023-2024 Stdware Collections (https://www.github.com/stdware)
-// Copyright (C) 2021-2023 wangwenx190 (Yuhang Zhao)
-// SPDX-License-Identifier: Apache-2.0
+
+
+
 
 #ifndef WIDGETWINDOWAGENT_H
 #define WIDGETWINDOWAGENT_H
@@ -31,7 +31,7 @@ namespace QWK {
         void setSystemButton(SystemButton button, QWidget *w);
 
 #ifdef Q_OS_MAC
-        // The system button area APIs are experimental, very likely to change in the future.
+        
         QWidget *systemButtonArea() const;
         void setSystemButtonArea(QWidget *widget);
 
@@ -52,4 +52,4 @@ namespace QWK {
 
 }
 
-#endif // WIDGETWINDOWAGENT_H
+#endif 

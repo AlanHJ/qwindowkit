@@ -1,18 +1,18 @@
-// Copyright (C) 2021-2023 wangwenx190 (Yuhang Zhao)
-// Copyright (C) 2023-2024 Stdware Collections (https://www.github.com/stdware)
-// SPDX-License-Identifier: Apache-2.0
+
+
+
 
 #ifndef ABSTRACTWINDOWCONTEXT_P_H
 #define ABSTRACTWINDOWCONTEXT_P_H
 
-//
-//  W A R N I N G !!!
-//  -----------------
-//
-// This file is not part of the QWindowKit API. It is used purely as an
-// implementation detail. This header file may change from version to
-// version without notice, or may even be removed.
-//
+
+
+
+
+
+
+
+
 
 #include <array>
 #include <list>
@@ -90,9 +90,9 @@ namespace QWK {
             RaiseWindowHook,
             ShowSystemMenuHook,
             DefaultColorsHook,
-            DrawWindows10BorderHook_Emulated, // Only works on Windows 10, emulated workaround
-            DrawWindows10BorderHook_Native,   // Only works on Windows 10, native workaround
-            SystemButtonAreaChangedHook,      // Only works on Mac
+            DrawWindows10BorderHook_Emulated, 
+            DrawWindows10BorderHook_Native,   
+            SystemButtonAreaChangedHook,      
         };
         virtual void virtual_hook(int id, void *data);
 
@@ -169,4 +169,4 @@ namespace QWK {
 
 }
 
-#endif // ABSTRACTWINDOWCONTEXT_P_H
+#endif 

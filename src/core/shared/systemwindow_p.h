@@ -1,18 +1,18 @@
-// Copyright (C) 2023-2024 Stdware Collections (https://www.github.com/stdware)
-// Copyright (C) 2021-2023 wangwenx190 (Yuhang Zhao)
-// SPDX-License-Identifier: Apache-2.0
+
+
+
 
 #ifndef SYSTEMWINDOW_P_H
 #define SYSTEMWINDOW_P_H
 
-//
-//  W A R N I N G !!!
-//  -----------------
-//
-// This file is not part of the QWindowKit API. It is used purely as an
-// implementation detail. This header file may change from version to
-// version without notice, or may even be removed.
-//
+
+
+
+
+
+
+
+
 
 #include <QtGui/QWindow>
 #include <QtGui/QMouseEvent>
@@ -126,11 +126,11 @@ namespace QWK {
         Qt::Edges resizeEdges;
     };
 
-    // QWindow::startSystemMove() and QWindow::startSystemResize() is first supported at Qt 5.15
-    // QWindow::startSystemResize() returns false on macOS
-    // QWindow::startSystemMove() and QWindow::startSystemResize() returns false on Linux Unity DE
+    
+    
+    
 
-    // When the new API fails, we emulate the window actions using the classical API.
+    
 
     inline void startSystemMove(QWindow *window) {
 #if (QT_VERSION < QT_VERSION_CHECK(5, 15, 0))
@@ -160,4 +160,4 @@ namespace QWK {
 
 }
 
-#endif // SYSTEMWINDOW_P_H
+#endif 

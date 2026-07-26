@@ -1,6 +1,6 @@
-// Copyright (C) 2023-2024 Stdware Collections (https://www.github.com/stdware)
-// Copyright (C) 2021-2023 wangwenx190 (Yuhang Zhao)
-// SPDX-License-Identifier: Apache-2.0
+
+
+
 
 #include "quickwindowagent_p.h"
 
@@ -54,7 +54,7 @@ namespace QWK {
         auto api = win->rendererInterface()->graphicsApi();
         switch (api) {
             case QSGRendererInterface::OpenGL:
-                // FIXME: may be wrong in earlier Windows 10.
+                
                 return false;
             case QSGRendererInterface::Direct3D11:
 #    if QT_VERSION >= QT_VERSION_CHECK(6, 6, 0)
@@ -70,22 +70,22 @@ namespace QWK {
 
     BorderItem::BorderItem(QQuickItem *parent, AbstractWindowContext *context)
         : QQuickPaintedItem(parent), Windows10BorderHandler(context) {
-        setAntialiasing(true);         // We need anti-aliasing to give us better result.
-        setFillColor(Qt::transparent); // Will improve the performance a little bit.
-        setOpaquePainting(true);       // Will also improve the performance, we don't draw
-                                       // semi-transparent borders of course.
+        setAntialiasing(true);         
+        setFillColor(Qt::transparent); 
+        setOpaquePainting(true);       
+                                       
 
         auto parentPri = QQuickItemPrivate::get(parent);
         auto anchors = QQuickItemPrivate::get(this)->anchors();
 
-        // Workaround for top border
-        // anchors->setTop(parentPri->top());
+        
+        
 
         anchors->setLeft(parentPri->left());
         anchors->setRight(parentPri->right());
 
-        setZ(std::numeric_limits<qreal>::max()); // Make sure our fake border always above
-                                                 // everything in the window.
+        setZ(std::numeric_limits<qreal>::max()); 
+                                                 
 
 #  if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
         connect(window(), &QQuickWindow::afterSynchronizing, this,
@@ -94,7 +94,7 @@ namespace QWK {
         connect(window(), &QQuickWindow::activeChanged, this,
                 &BorderItem::_q_windowActivityChanged);
 
-        // First update
+        
         if (context->windowId()) {
             setupNecessaryAttributes();
         }
@@ -111,10 +111,10 @@ namespace QWK {
 #  if QT_VERSION_MAJOR < 6
         setHeight(1);
 #  else
-        // Workaround for top border
-        // When the height is less than 0.5, it will be regarded as invisible, we apply this
-        // workaround to make it slightly exposed. When the height is too big, a transparent gap
-        // will appear on the upper frame.
+        
+        
+        
+        
         setHeight(0.5);
         setY(-0.49);
 #  endif
@@ -192,7 +192,7 @@ namespace QWK {
     }
 
     void QuickWindowAgentPrivate::setupWindows10BorderWorkaround() {
-        // Install painting hook
+        
         auto ctx = context.get();
         if (ctx->windowAttribute(QStringLiteral("win10-border-needed")).toBool()) {
             std::ignore = new BorderItem(hostWindow->contentItem(), ctx);

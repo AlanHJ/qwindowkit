@@ -1,6 +1,6 @@
-// Copyright (C) 2023-2024 Stdware Collections (https://www.github.com/stdware)
-// Copyright (C) 2021-2023 wangwenx190 (Yuhang Zhao)
-// SPDX-License-Identifier: Apache-2.0
+
+
+
 
 #include "qwindowkit_windows.h"
 
@@ -61,9 +61,9 @@ namespace QWK {
             (type != REG_SZ && type != REG_EXPAND_SZ) || size <= 2) {
             return result;
         }
-        // Reserve more for rare cases where trailing '\0' are missing in registry.
-        // Rely on 0-termination since strings of size 256 padded with 0 have been
-        // observed (QTBUG-84455).
+        
+        
+        
         size += 2;
         QVarLengthArray<unsigned char> buffer(static_cast<int>(size));
         std::fill(buffer.data(), buffer.data() + size, 0u);

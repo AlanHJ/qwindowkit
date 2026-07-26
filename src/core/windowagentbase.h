@@ -1,6 +1,6 @@
-// Copyright (C) 2023-2024 Stdware Collections (https://www.github.com/stdware)
-// Copyright (C) 2021-2023 wangwenx190 (Yuhang Zhao)
-// SPDX-License-Identifier: Apache-2.0
+
+
+
 
 #ifndef WINDOWAGENTBASE_H
 #define WINDOWAGENTBASE_H
@@ -24,6 +24,9 @@ namespace QWK {
         enum SystemButton {
             Unknown,
             WindowIcon,
+            Back,
+            Home,
+            Fav,
             Help,
             Minimize,
             Maximize,
@@ -35,7 +38,7 @@ namespace QWK {
         Q_INVOKABLE bool setWindowAttribute(const QString &key, const QVariant &attribute);
 
     public Q_SLOTS:
-        void showSystemMenu(const QPoint &pos); // Only available on Windows now
+        void showSystemMenu(const QPoint &pos); 
         void centralize();
         void raise();
 
@@ -47,4 +50,4 @@ namespace QWK {
 
 }
 
-#endif // WINDOWAGENTBASE_H
+#endif 

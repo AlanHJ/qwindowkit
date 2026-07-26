@@ -1,6 +1,6 @@
-// Copyright (C) 2023-2024 Stdware Collections (https://www.github.com/stdware)
-// Copyright (C) 2021-2023 wangwenx190 (Yuhang Zhao)
-// SPDX-License-Identifier: Apache-2.0
+
+
+
 
 #include "quickwindowagent_p.h"
 
@@ -33,7 +33,7 @@ namespace QWK {
                 &SystemButtonAreaItemHandler::updateSystemButtonArea);
 
         ctx->setSystemButtonAreaCallback([item](const QSize &) {
-            return QRectF(item->mapToScene(QPointF(0, 0)), item->size()).toRect(); //
+            return QRectF(item->mapToScene(QPointF(0, 0)), item->size()).toRect(); 
         });
     }
 

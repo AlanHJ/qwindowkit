@@ -1,6 +1,6 @@
-// Copyright (C) 2023-2024 Stdware Collections (https://www.github.com/stdware)
-// Copyright (C) 2021-2023 wangwenx190 (Yuhang Zhao)
-// SPDX-License-Identifier: Apache-2.0
+
+
+
 
 #ifndef STYLEAGENT_H
 #define STYLEAGENT_H
@@ -8,7 +8,7 @@
 #include <memory>
 
 #include <QtCore/QObject>
-#include <QtGui/QColor>
+#include <QtGui/QWindow>
 
 #include <QWKCore/qwkglobal.h>
 
@@ -33,11 +33,9 @@ namespace QWK {
 
     public:
         SystemTheme systemTheme() const;
-        QColor systemAccentColor() const;
 
     Q_SIGNALS:
         void systemThemeChanged();
-        void systemAccentColorChanged();
 
     protected:
         StyleAgent(StyleAgentPrivate &d, QObject *parent = nullptr);
@@ -47,4 +45,4 @@ namespace QWK {
 
 }
 
-#endif // STYLEAGENT_H
+#endif 

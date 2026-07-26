@@ -1,10 +1,12 @@
-// Copyright (C) 2023-2024 Stdware Collections (https://www.github.com/stdware)
-// Copyright (C) 2021-2023 wangwenx190 (Yuhang Zhao)
-// SPDX-License-Identifier: Apache-2.0
+
+
+
 
 #include "styleagent_p.h"
 
 #include <QtCore/QSet>
+#include <QtCore/QVariant>
+#include <QtGui/QColor>
 
 #include <QWKCore/private/qwkwindowsextra_p.h>
 #include <QWKCore/private/nativeeventfilter_p.h>
@@ -26,10 +28,8 @@ namespace QWK {
 
     static void notifyAllStyleAgents() {
         auto theme = getSystemTheme();
-        auto color = getAccentColor();
         for (auto &&ap : std::as_const(*g_styleAgentSet())) {
             ap->notifyThemeChanged(theme);
-            ap->notifyAccentColorChanged(color);
         }
     }
 
@@ -84,7 +84,6 @@ namespace QWK {
 
     void StyleAgentPrivate::setupSystemThemeHook() {
         systemTheme = getSystemTheme();
-        systemAccentColor = getAccentColor();
 
         g_styleAgentSet->insert(this);
         SystemSettingEventFilter::install();

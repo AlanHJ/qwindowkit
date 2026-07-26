@@ -1,6 +1,6 @@
-// Copyright (C) 2021-2023 wangwenx190 (Yuhang Zhao)
-// Copyright (C) 2023-2024 Stdware Collections (https://www.github.com/stdware)
-// SPDX-License-Identifier: Apache-2.0
+
+
+
 
 #include "abstractwindowcontext_p.h"
 
@@ -69,7 +69,7 @@ namespace QWK {
         }
 
         if (org) {
-            // Since the title bar is changed, all items inside it should be dereferenced right away
+            
             removeSystemButtonsAndHitTestItems();
         }
         m_titleBar = item;
@@ -101,19 +101,19 @@ namespace QWK {
 
     bool AbstractWindowContext::isInTitleBarDraggableArea(const QPoint &pos) const {
         if (!m_titleBar) {
-            // There's no title bar at all, the mouse will always be in the client area.
+            
             return false;
         }
         if (!m_delegate->isVisible(m_titleBar) || !m_delegate->isEnabled(m_titleBar)) {
-            // The title bar is hidden or disabled for some reason, treat it as there's
-            // no title bar.
+            
+            
             return false;
         }
         QRect windowRect = {QPoint(0, 0), m_windowHandle->size()};
         QRect titleBarRect = m_delegate->mapGeometryToScene(m_titleBar);
         if (!titleBarRect.intersects(windowRect)) {
-            // The title bar is totally outside the window for some reason,
-            // also treat it as there's no title bar.
+            
+            
             return false;
         }
 
@@ -126,7 +126,7 @@ namespace QWK {
             return false;
         }
 
-        for (auto &&item : std::as_const(m_hitTestVisibleItems)) {
+        for (auto item : m_hitTestVisibleItems) {
             if (item && m_delegate->isVisible(item) &&
                 m_delegate->mapGeometryToScene(item).contains(pos)) {
                 return false;
@@ -198,10 +198,10 @@ namespace QWK {
         auto oldWinId = m_windowId;
         m_windowId = m_winIdChangeEventFilter->winId();
 
-        // In Qt6, after QWidget::close() is called, the related QWindow's all surfaces and the
-        // platform window will be removed, and the WinId will be set to 0. After that, when the
-        // QWidget is shown again, the whole things will be recreated again.
-        // As a result, we must update our WindowContext each time the WinId changes.
+        
+        
+        
+        
         if (m_windowHandle) {
             removeEventFilter(m_windowHandle);
         }
@@ -214,7 +214,7 @@ namespace QWK {
             winIdChanged(m_windowId, oldWinId);
 
             if (m_windowId) {
-                // Refresh window attributes
+                
                 for (auto it = m_windowAttributesOrder.begin();
                      it != m_windowAttributesOrder.end();) {
                     if (!windowAttributeChanged(it->first, it->second, {})) {
@@ -226,7 +226,7 @@ namespace QWK {
                 }
             }
 
-            // Send to shared dispatchers
+            
             QEvent e(QEvent::WinIdChange);
             sharedDispatch(m_host, &e);
         }

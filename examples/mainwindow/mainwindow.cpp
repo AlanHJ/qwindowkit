@@ -1,6 +1,6 @@
-// Copyright (C) 2023-2024 Stdware Collections (https://www.github.com/stdware)
-// Copyright (C) 2021-2023 wangwenx190 (Yuhang Zhao)
-// SPDX-License-Identifier: Apache-2.0
+
+
+
 
 #include "mainwindow.h"
 
@@ -19,7 +19,7 @@
 #  include <QtWidgets/QActionGroup>
 #endif
 
-// #include <QtWebEngineWidgets/QWebEngineView>
+
 
 #include <QWKWidgets/widgetwindowagent.h>
 
@@ -63,8 +63,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     setWindowTitle(tr("Example MainWindow"));
     resize(800, 600);
 
-    // setFixedHeight(600);
-    // windowAgent->centralize();
+    
+    
 }
 
 static inline void emulateLeaveEvent(QWidget *widget) {
@@ -132,15 +132,15 @@ bool MainWindow::event(QEvent *event) {
 }
 
 void MainWindow::installWindowAgent() {
-    // 1. Setup window agent
+    
     windowAgent = new QWK::WidgetWindowAgent(this);
     windowAgent->setup(this);
 
-    // 2. Construct your title bar
+    
     auto menuBar = [this]() {
         auto menuBar = new QMenuBar(this);
 
-        // Virtual menu
+        
         auto file = new QMenu(tr("File(&F)"), menuBar);
         file->addAction(new QAction(tr("New(&N)"), menuBar));
         file->addAction(new QAction(tr("Open(&O)"), menuBar));
@@ -150,14 +150,14 @@ void MainWindow::installWindowAgent() {
         edit->addAction(new QAction(tr("Undo(&U)"), menuBar));
         edit->addAction(new QAction(tr("Redo(&R)"), menuBar));
 
-        // Theme action
+        
         auto darkAction = new QAction(tr("Enable dark theme"), menuBar);
         darkAction->setCheckable(true);
         connect(darkAction, &QAction::triggered, this, [this](bool checked) {
-            loadStyleSheet(checked ? Dark : Light); //
+            loadStyleSheet(checked ? Dark : Light); 
         });
         connect(this, &MainWindow::themeChanged, darkAction, [this, darkAction]() {
-            darkAction->setChecked(currentTheme == Dark); //
+            darkAction->setChecked(currentTheme == Dark); 
         });
 
 #ifdef Q_OS_WIN
@@ -190,8 +190,8 @@ void MainWindow::installWindowAgent() {
         winStyleGroup->addAction(micaAltAction);
         connect(winStyleGroup, &QActionGroup::triggered, this,
                 [this, winStyleGroup](QAction *action) {
-                    // Unset all custom style attributes first, otherwise the style will not display
-                    // correctly
+                    
+                    
                     for (const QAction *_act : winStyleGroup->actions()) {
                         const QString data = _act->data().toString();
                         if (data.isEmpty() || data == QStringLiteral("none")) {
@@ -210,9 +210,9 @@ void MainWindow::installWindowAgent() {
                 });
 
 #elif defined(Q_OS_MAC)
-        // Set whether to use system buttons (close/minimize/zoom)
-        // - true:  Hide system buttons (use custom UI controls)
-        // - false: Show native system buttons (default behavior)
+        
+        
+        
         windowAgent->setWindowAttribute(QStringLiteral("no-system-buttons"), false);
 
         auto darkBlurAction = new QAction(tr("Dark blur"), menuBar);
@@ -257,7 +257,7 @@ void MainWindow::installWindowAgent() {
         macStyleGroup->addAction(noBlurAction);
 #endif
 
-        // Real menu
+        
         auto settings = new QMenu(tr("Settings(&S)"), menuBar);
         settings->addAction(darkAction);
 
@@ -335,10 +335,10 @@ void MainWindow::installWindowAgent() {
 #endif
     windowAgent->setHitTestVisible(menuBar, true);
 
-#if defined(Q_OS_MAC) && 0
+#ifdef Q_OS_MAC
     windowAgent->setSystemButtonAreaCallback([](const QSize &size) {
         static constexpr const int width = 75;
-        return QRect(QPoint(size.width() - width, 0), QSize(width, size.height())); //
+        return QRect(QPoint(size.width() - width, 0), QSize(width, size.height())); 
     });
 #endif
 
@@ -346,7 +346,7 @@ void MainWindow::installWindowAgent() {
 
 
 #ifndef Q_OS_MAC
-    connect(windowBar, &QWK::WindowBar::pinRequested, this, [this, pinButton](bool pin) {
+    connect(windowBar, &QWK::WindowBar::pinRequested, this, [this, pinButton](bool pin){
         if (isHidden() || isMinimized() || isMaximized() || isFullScreen()) {
             return;
         }
@@ -362,9 +362,9 @@ void MainWindow::installWindowAgent() {
             showNormal();
         }
 
-        // It's a Qt issue that if a QAbstractButton::clicked triggers a window's maximization,
-        // the button remains to be hovered until the mouse move. As a result, we need to
-        // manually send leave events to the button.
+        
+        
+        
         emulateLeaveEvent(maxButton);
     });
     connect(windowBar, &QWK::WindowBar::closeRequested, this, &QWidget::close);

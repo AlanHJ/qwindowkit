@@ -182,9 +182,7 @@ namespace QWK {
                     if (!screenRectCallback || !systemButtonVisible)
                         return;
 
-                    for (const auto &button : systemButtons()) {
-                        button.hidden = false;
-                    }
+                    updateSystemButtonVisibility();
                     updateSystemButtonRect();
                     break;
                 }
@@ -211,11 +209,19 @@ namespace QWK {
         // System buttons visibility
         void setSystemButtonVisible(bool visible) {
             systemButtonVisible = visible;
-            for (const auto &button : systemButtons()) {
-                button.hidden = !visible;
-            }
+            updateSystemButtonVisibility();
 
             if (!screenRectCallback || !visible) {
+                return;
+            }
+            updateSystemButtonRect();
+        }
+
+        void setSystemCloseButtonOnly(bool closeButtonOnly) {
+            systemCloseButtonOnly = closeButtonOnly;
+            updateSystemButtonVisibility();
+
+            if (!screenRectCallback || !systemButtonVisible) {
                 return;
             }
             updateSystemButtonRect();
@@ -296,6 +302,17 @@ namespace QWK {
             return closeBtn.superview.frame.size.height;
         }
 
+        void updateSystemButtonVisibility() {
+            const auto &buttons = systemButtons();
+            const BOOL allButtonsHidden = systemButtonVisible ? NO : YES;
+            const BOOL secondaryButtonsHidden =
+                (!systemButtonVisible || systemCloseButtonOnly) ? YES : NO;
+
+            buttons[0].hidden = allButtonsHidden;
+            buttons[1].hidden = secondaryButtonsHidden;
+            buttons[2].hidden = secondaryButtonsHidden;
+        }
+
         // Blur effect
         bool setBlurEffect(BlurMode mode) {
             static Class visualEffectViewClass = NSClassFromString(@"NSVisualEffectView");
@@ -358,9 +375,12 @@ namespace QWK {
             nswindow.movableByWindowBackground = NO;
             nswindow.movable = NO; // This line causes the window in the wrong position when
                                    // become fullscreen.
-            [nswindow standardWindowButton:NSWindowCloseButton].hidden = NO;
-            [nswindow standardWindowButton:NSWindowMiniaturizeButton].hidden = NO;
-            [nswindow standardWindowButton:NSWindowZoomButton].hidden = NO;
+            updateSystemButtonVisibility();
+        }
+
+        void syncWindowChrome() {
+            setSystemTitleBarVisible(false);
+            setSystemButtonVisible(systemButtonVisible);
         }
 
         static void replaceImplementations() {
@@ -503,6 +523,7 @@ namespace QWK {
         QWK_NSViewObserver* observer = nil;
 
         bool systemButtonVisible = true;
+        bool systemCloseButtonOnly = false;
         ScreenRectCallback screenRectCallback;
 
         static inline QWK_NSWindowObserver *windowObserver = nil;
@@ -739,9 +760,11 @@ namespace QWK {
         // Allocate new resources
         const auto proxy = ensureWindowProxy(winId);
         if (proxy) {
-            proxy->setSystemButtonVisible(!windowAttribute(QStringLiteral("no-system-buttons")).toBool());
             proxy->setScreenRectCallback(m_systemButtonAreaCallback);
-            proxy->setSystemTitleBarVisible(false);
+            proxy->setSystemCloseButtonOnly(
+                windowAttribute(QStringLiteral("macos-close-button-only")).toBool());
+            proxy->setSystemButtonVisible(!windowAttribute(QStringLiteral("no-system-buttons")).toBool());
+            proxy->syncWindowChrome();
         }
     }
 
@@ -759,6 +782,17 @@ namespace QWK {
 #endif
                 return false;
             ensureWindowProxy(m_windowId)->setSystemButtonVisible(!attribute.toBool());
+            return true;
+        }
+
+        if (key == QStringLiteral("macos-close-button-only")) {
+#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
+            if (attribute.type() != QVariant::Bool)
+#else
+            if (attribute.typeId() != QMetaType::Type::Bool)
+#endif
+                return false;
+            ensureWindowProxy(m_windowId)->setSystemCloseButtonOnly(attribute.toBool());
             return true;
         }
 
@@ -822,8 +856,7 @@ namespace QWK {
         NSWindow* newWindow = change[NSKeyValueChangeNewKey];
         // NSWindow* oldWindow = change[NSKeyValueChangeOldKey];
         if (newWindow) {
-            _proxy->setSystemTitleBarVisible(false);
-            _proxy->updateSystemButtonRect();
+            _proxy->syncWindowChrome();
         }
     }
 }

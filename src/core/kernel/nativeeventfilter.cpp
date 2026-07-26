@@ -1,6 +1,6 @@
-// Copyright (C) 2023-2024 Stdware Collections (https://www.github.com/stdware)
-// Copyright (C) 2021-2023 wangwenx190 (Yuhang Zhao)
-// SPDX-License-Identifier: Apache-2.0
+
+
+
 
 #include "nativeeventfilter_p.h"
 
@@ -50,8 +50,8 @@ namespace QWK {
     }
 
 
-    // Avoid adding multiple global native event filters to QGuiApplication
-    // in this library.
+    
+    
     class AppMasterNativeEventFilter : public QAbstractNativeEventFilter,
                                        public NativeEventDispatcher {
     public:
@@ -59,7 +59,7 @@ namespace QWK {
             qApp->installNativeEventFilter(this);
         }
 
-        // The base class removes automatically
+        
         ~AppMasterNativeEventFilter() override = default;
 
         bool nativeEventFilter(const QByteArray &eventType, void *message,

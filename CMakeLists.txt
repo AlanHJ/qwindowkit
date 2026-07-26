@@ -1,11 +1,25 @@
 cmake_minimum_required(VERSION 3.19)
 
 project(QWindowKit
-    VERSION 1.5.1.0
+    VERSION 1.4.1.0
     LANGUAGES CXX
     HOMEPAGE_URL "https://github.com/stdware/qwindowkit"
     DESCRIPTION "Cross-platform window customization framework"
 )
+
+if(NOT DEFINED CMAKE_BUILD_TYPE AND NOT DEFINED CMAKE_CONFIGURATION_TYPES)
+    set(CMAKE_BUILD_TYPE "Release")
+endif()
+
+if(LINUX AND NOT CMAKE_CROSSCOMPILING)
+    set(CMAKE_INSTALL_RPATH "$ORIGIN")
+    set(CMAKE_INSTALL_RPATH_USE_LINK_PATH OFF)
+endif()
+
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+set(CMAKE_VISIBILITY_INLINES_HIDDEN ON)
+set(CMAKE_C_VISIBILITY_PRESET "hidden")
+set(CMAKE_CXX_VISIBILITY_PRESET "hidden")
 
 # ----------------------------------
 # Build Options
@@ -17,7 +31,7 @@ option(QWINDOWKIT_BUILD_EXAMPLES "Build examples" OFF)
 option(QWINDOWKIT_BUILD_DOCUMENTATIONS "Build documentations" OFF)
 option(QWINDOWKIT_INSTALL "Install library" ON)
 
-option(QWINDOWKIT_FORCE_QT_WINDOW_CONTEXT "Force use Qt Window Context" OFF)
+option(QWINDOWKIT_ENABLE_QT_WINDOW_CONTEXT "Enable Qt Window Context anyway" OFF)
 option(QWINDOWKIT_ENABLE_WINDOWS_SYSTEM_BORDERS "Enable system borders on Windows" ON)
 option(QWINDOWKIT_ENABLE_STYLE_AGENT "Enable building style agent" ON)
 
@@ -36,10 +50,9 @@ Detailed Introcuction to Configure Options:
   - If so, the Windows 10 top border issue will disappear. However, part of the client edge
     area will be occupied as the resizing margins.
 
-`QWINDOWKIT_FORCE_QT_WINDOW_CONTEXT`
+`QWINDOWKIT_ENABLE_QT_WINDOW_CONTEXT`
   - If you want to use pure Qt emulated frameless implementation, you can ENABLE this option.
   - If so, all system native features will be lost.
-  - The Qt Window Context is supported on all platforms.
 
 `QWINDOWKIT_ENABLE_STYLE_AGENT`
   - Select whether to exclude the style component by DISABLING this option according to your
@@ -60,32 +73,9 @@ if(MSVC)
         set(CMAKE_DEBUG_POSTFIX "d")
     endif()
 elseif(MINGW)
-    if(NOT DEFINED CMAKE_STATIC_LIBRARY_PREFIX)
-        set(CMAKE_STATIC_LIBRARY_PREFIX "")
-    endif()
-
-    if(NOT DEFINED CMAKE_SHARED_LIBRARY_PREFIX)
-        set(CMAKE_SHARED_LIBRARY_PREFIX "")
-    endif()
-
-    if(NOT DEFINED CMAKE_IMPORT_LIBRARY_PREFIX)
-        set(CMAKE_IMPORT_LIBRARY_PREFIX "")
-    endif()
+    set(CMAKE_STATIC_LIBRARY_PREFIX "")
+    set(CMAKE_SHARED_LIBRARY_PREFIX "")
 endif()
-
-if(NOT DEFINED CMAKE_BUILD_TYPE AND NOT DEFINED CMAKE_CONFIGURATION_TYPES)
-    set(CMAKE_BUILD_TYPE "Release")
-endif()
-
-if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux" AND NOT CMAKE_CROSSCOMPILING)
-    set(CMAKE_INSTALL_RPATH "\$ORIGIN:\$ORIGIN/../lib")
-    set(CMAKE_INSTALL_RPATH_USE_LINK_PATH OFF)
-endif()
-
-set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-set(CMAKE_VISIBILITY_INLINES_HIDDEN ON)
-set(CMAKE_C_VISIBILITY_PRESET "hidden")
-set(CMAKE_CXX_VISIBILITY_PRESET "hidden")
 
 if(QWINDOWKIT_INSTALL)
     include(GNUInstallDirs)
@@ -98,9 +88,9 @@ endif()
 set(QWINDOWKIT_VERSION ${PROJECT_VERSION})
 set(QWINDOWKIT_INSTALL_NAME ${PROJECT_NAME})
 
-string(TIMESTAMP _QWINDOWKIT_CURRENT_YEAR "%Y")
-set(QWINDOWKIT_COPYRIGHT "Copyright 2023-${_QWINDOWKIT_CURRENT_YEAR} Stdware Collections")
-set(QWINDOWKIT_DESCRIPTION ${PROJECT_DESCRIPTION})
+string(TIMESTAMP _QACTIONKIT_CURRENT_YEAR "%Y")
+set(QACTIONKIT_COPYRIGHT "Copyright 2023-${_QACTIONKIT_CURRENT_YEAR} Stdware Collections")
+set(QACTIONKIT_DESCRIPTION ${PROJECT_DESCRIPTION})
 
 # ----------------------------------
 # Find basic dependencies
@@ -131,8 +121,6 @@ endif()
 
 qm_import(Filesystem)
 qm_init_directories()
-
-set(QT_NO_PRIVATE_MODULE_WARNING ON)
 
 # ----------------------------------
 # Add source modules

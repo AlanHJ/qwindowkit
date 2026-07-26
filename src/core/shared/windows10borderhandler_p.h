@@ -1,18 +1,18 @@
-// Copyright (C) 2023-2024 Stdware Collections (https://www.github.com/stdware)
-// Copyright (C) 2021-2023 wangwenx190 (Yuhang Zhao)
-// SPDX-License-Identifier: Apache-2.0
+
+
+
 
 #ifndef WINDOWS10BORDERHANDLER_P_H
 #define WINDOWS10BORDERHANDLER_P_H
 
-//
-//  W A R N I N G !!!
-//  -----------------
-//
-// This file is not part of the QWindowKit API. It is used purely as an
-// implementation detail. This header file may change from version to
-// version without notice, or may even be removed.
-//
+
+
+
+
+
+
+
+
 
 #include <QtGui/QWindow>
 #include <QtGui/QMouseEvent>
@@ -32,13 +32,13 @@ namespace QWK {
 
         inline void setupNecessaryAttributes() {
             if (!isWin11OrGreater()) {
-                // https://github.com/microsoft/terminal/blob/71a6f26e6ece656084e87de1a528c4a8072eeabd/src/cascadia/WindowsTerminal/NonClientIslandWindow.cpp#L940
-                // Must extend top frame to client area
+                
+                
                 static QVariant defaultMargins = QVariant::fromValue(QMargins(0, 1, 0, 0));
                 ctx->setWindowAttribute(QStringLiteral("extra-margins"), defaultMargins);
             }
 
-            // Enable dark mode by default, otherwise the system borders are white
+            
             ctx->setWindowAttribute(QStringLiteral("dark-mode"), true);
         }
 
@@ -70,18 +70,18 @@ namespace QWK {
                 return;
             }
 
-            // ### FIXME: transparent seam
+            
             if (windowActive) {
-                // Restore margins when the window is active
+                
                 static QVariant defaultMargins = QVariant::fromValue(QMargins(0, 1, 0, 0));
                 ctx->setWindowAttribute(QStringLiteral("extra-margins"), defaultMargins);
                 return;
             }
 
-            // https://github.com/microsoft/terminal/blob/71a6f26e6ece656084e87de1a528c4a8072eeabd/src/cascadia/WindowsTerminal/NonClientIslandWindow.cpp#L904
-            // When the window is inactive, there is a transparency bug in the top
-            // border, and we need to extend the non-client area to the whole title
-            // bar.
+            
+            
+            
+            
             QRect frame = ctx->windowAttribute(QStringLiteral("window-rect")).toRect();
             QMargins margins{0, -frame.top(), 0, 0};
             ctx->setWindowAttribute(QStringLiteral("extra-margins"), QVariant::fromValue(margins));
@@ -114,11 +114,11 @@ namespace QWK {
                 case WM_THEMECHANGED:
                 case WM_SYSCOLORCHANGE:
                 case WM_DWMCOLORIZATIONCOLORCHANGED: {
-                    // If we do not refresh this property, the native border will turn white
-                    // permanently (like the dark mode is turned off) after the user changes
-                    // the accent color in system personalization settings.
-                    // So we need this ugly hack to re-apply dark mode to get rid of this
-                    // strange Windows bug.
+                    
+                    
+                    
+                    
+                    
                     if (ctx->windowAttribute(QStringLiteral("dark-mode")).toBool()) {
                         ctx->setWindowAttribute(QStringLiteral("dark-mode"), true);
                     }
@@ -149,4 +149,4 @@ namespace QWK {
 
 }
 
-#endif // WINDOWS10BORDERHANDLER_P_H
+#endif 

@@ -1,6 +1,6 @@
-// Copyright (C) 2023-2024 Stdware Collections (https://www.github.com/stdware)
-// Copyright (C) 2021-2023 wangwenx190 (Yuhang Zhao)
-// SPDX-License-Identifier: Apache-2.0
+
+
+
 
 #ifndef QWINDOWKIT_WINDOWS_H
 #define QWINDOWKIT_WINDOWS_H
@@ -42,9 +42,9 @@
 #  define USER_DEFAULT_SCREEN_DPI (96)
 #endif
 
-// Maybe undocumented Windows messages
-// https://github.com/tinysec/public/blob/master/win32k/MessageTable.md
-// https://ulib.sourceforge.io/doxy/a00239.html
+
+
+
 #ifndef WM_UAHDESTROYWINDOW
 #  define WM_UAHDESTROYWINDOW (0x0090)
 #endif
@@ -146,9 +146,9 @@ namespace QWK {
 
     }
 
-    //
-    // Registry Helpers
-    //
+    
+    
+    
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
     class QWK_CORE_EXPORT WindowsRegistryKey {
@@ -177,21 +177,16 @@ namespace QWK {
     using WindowsRegistryKey = QWinRegistryKey;
 #else
     class WindowsRegistryKey : public QWinRegistryKey {
-#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 1)
-        using SubKeyType = const wchar_t*;
-#else
-        using SubKeyType = QStringView;
-#endif
     public:
-        WindowsRegistryKey(HKEY parentHandle, SubKeyType subKey,
-            REGSAM permissions = KEY_READ, REGSAM access = 0)
+        WindowsRegistryKey(HKEY parentHandle, QStringView subKey, REGSAM permissions = KEY_READ,
+                           REGSAM access = 0)
             : QWinRegistryKey(parentHandle, subKey, permissions, access) {
         }
 
-        inline std::pair<DWORD, bool> dwordValue(SubKeyType subKey) const;
+        inline std::pair<DWORD, bool> dwordValue(QStringView subKey) const;
     };
 
-    inline std::pair<DWORD, bool> WindowsRegistryKey::dwordValue(SubKeyType subKey) const {
+    inline std::pair<DWORD, bool> WindowsRegistryKey::dwordValue(QStringView subKey) const {
         const auto val = value<DWORD>(subKey);
         if (!val) {
             return {0, false};
@@ -200,9 +195,9 @@ namespace QWK {
     }
 #endif
 
-    //
-    // Version Helpers
-    //
+    
+    
+    
 
     inline bool isWin8OrGreater() {
         static const bool result = Private::IsWindows8OrGreater_Real();
@@ -261,9 +256,9 @@ namespace QWK {
         return result;
     };
 
-    //
-    // Native Event Helpers
-    //
+    
+    
+    
 
     inline bool isImmersiveColorSetChange(WPARAM wParam, LPARAM lParam) {
         return !wParam && lParam &&
@@ -276,4 +271,4 @@ namespace QWK {
 Q_DECLARE_METATYPE(QMargins)
 #endif
 
-#endif // QWINDOWKIT_WINDOWS_H
+#endif 

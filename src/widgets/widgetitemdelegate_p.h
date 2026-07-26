@@ -1,18 +1,18 @@
-// Copyright (C) 2023-2024 Stdware Collections (https://www.github.com/stdware)
-// Copyright (C) 2021-2023 wangwenx190 (Yuhang Zhao)
-// SPDX-License-Identifier: Apache-2.0
+
+
+
 
 #ifndef WIDGETITEMDELEGATE_P_H
 #define WIDGETITEMDELEGATE_P_H
 
-//
-//  W A R N I N G !!!
-//  -----------------
-//
-// This file is not part of the QWindowKit API. It is used purely as an
-// implementation detail. This header file may change from version to
-// version without notice, or may even be removed.
-//
+
+
+
+
+
+
+
+
 
 #include <QtCore/QObject>
 #include <QtGui/QWindow>
@@ -54,4 +54,4 @@ namespace QWK {
 
 }
 
-#endif // WIDGETITEMDELEGATE_P_H
+#endif 

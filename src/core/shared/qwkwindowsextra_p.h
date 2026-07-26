@@ -1,18 +1,18 @@
-// Copyright (C) 2023-2024 Stdware Collections (https://www.github.com/stdware)
-// Copyright (C) 2021-2023 wangwenx190 (Yuhang Zhao)
-// SPDX-License-Identifier: Apache-2.0
+
+
+
 
 #ifndef QWKWINDOWSEXTRA_P_H
 #define QWKWINDOWSEXTRA_P_H
 
-//
-//  W A R N I N G !!!
-//  -----------------
-//
-// This file is not part of the QWindowKit API. It is used purely as an
-// implementation detail. This header file may change from version to
-// version without notice, or may even be removed.
-//
+
+
+
+
+
+
+
+
 
 #include <QWKCore/qwindowkit_windows.h>
 
@@ -23,7 +23,7 @@
 
 #include <QtCore/private/qsystemlibrary_p.h>
 
-// Don't include this header in any header files.
+
 
 typedef struct _MARGINS
 {
@@ -59,48 +59,48 @@ extern "C" {
     HRESULT WINAPI DwmSetWindowAttribute(HWND, DWORD, LPCVOID, DWORD);
     HRESULT WINAPI DwmExtendFrameIntoClientArea(HWND, const MARGINS*);
     HRESULT WINAPI DwmEnableBlurBehindWindow(HWND, const DWM_BLURBEHIND*);
-} // extern "C"
+} 
 
 namespace QWK {
 
     enum _DWMWINDOWATTRIBUTE {
-        // [set] BOOL, Allows the use of host backdrop brushes for the window.
+        
         _DWMWA_USE_HOSTBACKDROPBRUSH = 17,
 
-        // Undocumented, the same with DWMWA_USE_IMMERSIVE_DARK_MODE, but available on systems
-        // before Win10 20H1.
+        
+        
         _DWMWA_USE_IMMERSIVE_DARK_MODE_BEFORE_20H1 = 19,
 
-        // [set] BOOL, Allows a window to either use the accent color, or dark, according to the
-        // user Color Mode preferences.
+        
+        
         _DWMWA_USE_IMMERSIVE_DARK_MODE = 20,
 
-        // [set] WINDOW_CORNER_PREFERENCE, Controls the policy that rounds top-level window corners
+        
         _DWMWA_WINDOW_CORNER_PREFERENCE = 33,
 
-        // [get] UINT, width of the visible border around a thick frame window
+        
         _DWMWA_VISIBLE_FRAME_BORDER_THICKNESS = 37,
 
-        // [get, set] SYSTEMBACKDROP_TYPE, Controls the system-drawn backdrop material of a window,
-        // including behind the non-client area.
+        
+        
         _DWMWA_SYSTEMBACKDROP_TYPE = 38,
 
-        // Undocumented, use this value to enable Mica material on Win11 21H2. You should use
-        // DWMWA_SYSTEMBACKDROP_TYPE instead on Win11 22H2 and newer.
+        
+        
         _DWMWA_MICA_EFFECT = 1029
     };
 
-    // Types used with DWMWA_SYSTEMBACKDROP_TYPE
+    
     enum _DWM_SYSTEMBACKDROP_TYPE {
-        _DWMSBT_AUTO, // [Default] Let DWM automatically decide the system-drawn backdrop for this
-                      // window.
-        _DWMSBT_NONE, // [Disable] Do not draw any system backdrop.
-        _DWMSBT_MAINWINDOW,      // [Mica] Draw the backdrop material effect corresponding to a
-                                 // long-lived window.
-        _DWMSBT_TRANSIENTWINDOW, // [Acrylic] Draw the backdrop material effect corresponding to a
-                                 // transient window.
-        _DWMSBT_TABBEDWINDOW,    // [Mica Alt] Draw the backdrop material effect corresponding to a
-                                 // window with a tabbed title bar.
+        _DWMSBT_AUTO, 
+                      
+        _DWMSBT_NONE, 
+        _DWMSBT_MAINWINDOW,      
+                                 
+        _DWMSBT_TRANSIENTWINDOW, 
+                                 
+        _DWMSBT_TABBEDWINDOW,    
+                                 
     };
 
     enum WINDOWCOMPOSITIONATTRIB {
@@ -141,10 +141,10 @@ namespace QWK {
         ACCENT_DISABLED = 0,
         ACCENT_ENABLE_GRADIENT = 1,
         ACCENT_ENABLE_TRANSPARENTGRADIENT = 2,
-        ACCENT_ENABLE_BLURBEHIND = 3,        // Traditional DWM blur
-        ACCENT_ENABLE_ACRYLICBLURBEHIND = 4, // RS4 1803
-        ACCENT_ENABLE_HOST_BACKDROP = 5,     // RS5 1809
-        ACCENT_INVALID_STATE = 6             // Using this value will remove the window background
+        ACCENT_ENABLE_BLURBEHIND = 3,        
+        ACCENT_ENABLE_ACRYLICBLURBEHIND = 4, 
+        ACCENT_ENABLE_HOST_BACKDROP = 5,     
+        ACCENT_INVALID_STATE = 6             
     };
 
     enum ACCENT_FLAG {
@@ -156,7 +156,7 @@ namespace QWK {
     struct ACCENT_POLICY {
         DWORD dwAccentState;
         DWORD dwAccentFlags;
-        DWORD dwGradientColor; // #AABBGGRR
+        DWORD dwGradientColor; 
         DWORD dwAnimationId;
     };
     using PACCENT_POLICY = ACCENT_POLICY *;
@@ -169,25 +169,25 @@ namespace QWK {
     using PWINDOWCOMPOSITIONATTRIBDATA = WINDOWCOMPOSITIONATTRIBDATA *;
 
     enum PREFERRED_APP_MODE {
-        PAM_DEFAULT = 0, // Default behavior on systems before Win10 1809. It indicates the
-                         // application doesn't support dark mode at all.
+        PAM_DEFAULT = 0, 
+                         
         PAM_AUTO =
-            1, // Available since Win10 1809, let system decide whether to enable dark mode or not.
-        PAM_DARK = 2, // Available since Win10 1903, force dark mode regardless of the system theme.
+            1, 
+        PAM_DARK = 2, 
         PAM_LIGHT =
-            3, // Available since Win10 1903, force light mode regardless of the system theme.
+            3, 
         PAM_MAX = 4
     };
 
     using SetWindowCompositionAttributePtr = BOOL(WINAPI *)(HWND, PWINDOWCOMPOSITIONATTRIBDATA);
 
-    // Win10 1809 (10.0.17763)
-    using RefreshImmersiveColorPolicyStatePtr = VOID(WINAPI *)(VOID); // Ordinal 104
-    using AllowDarkModeForWindowPtr = BOOL(WINAPI *)(HWND, BOOL);     // Ordinal 133
-    using AllowDarkModeForAppPtr = BOOL(WINAPI *)(BOOL);              // Ordinal 135
-    using FlushMenuThemesPtr = VOID(WINAPI *)(VOID);                  // Ordinal 136
-    // Win10 1903 (10.0.18362)
-    using SetPreferredAppModePtr = PREFERRED_APP_MODE(WINAPI *)(PREFERRED_APP_MODE); // Ordinal 135
+    
+    using RefreshImmersiveColorPolicyStatePtr = VOID(WINAPI *)(VOID); 
+    using AllowDarkModeForWindowPtr = BOOL(WINAPI *)(HWND, BOOL);     
+    using AllowDarkModeForAppPtr = BOOL(WINAPI *)(BOOL);              
+    using FlushMenuThemesPtr = VOID(WINAPI *)(VOID);                  
+    
+    using SetPreferredAppModePtr = PREFERRED_APP_MODE(WINAPI *)(PREFERRED_APP_MODE); 
 
     namespace {
 
@@ -341,14 +341,14 @@ namespace QWK {
         return {qmargins.left(), qmargins.right(), qmargins.top(), qmargins.bottom()};
     }
 
-    inline /*constexpr*/ QString hwnd2str(const WId windowId) {
-        // NULL handle is allowed here.
+    inline  QString hwnd2str(const WId windowId) {
+        
         return QLatin1String("0x") +
                QString::number(windowId, 16).toUpper().rightJustified(8, u'0');
     }
 
-    inline /*constexpr*/ QString hwnd2str(HWND hwnd) {
-        // NULL handle is allowed here.
+    inline  QString hwnd2str(HWND hwnd) {
+        
         return hwnd2str(reinterpret_cast<WId>(hwnd));
     }
 
@@ -427,8 +427,8 @@ namespace QWK {
         if (!value.second) {
             return {};
         }
-        // The retrieved value is in the #AABBGGRR format, we need to
-        // convert it to the #AARRGGBB format which Qt expects.
+        
+        
         QColor color = QColor::fromRgba(value.first);
         if (!color.isValid()) {
             return {};
@@ -439,18 +439,18 @@ namespace QWK {
 
     inline quint32 getDpiForWindow(HWND hwnd) {
         const DynamicApis &apis = DynamicApis::instance();
-        if (apis.pGetDpiForWindow) { // Win10
+        if (apis.pGetDpiForWindow) { 
             return apis.pGetDpiForWindow(hwnd);
-        } else if (apis.pGetDpiForMonitor) { // Win8.1
+        } else if (apis.pGetDpiForMonitor) { 
             HMONITOR monitor = ::MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST);
             UINT dpiX{0};
             UINT dpiY{0};
             apis.pGetDpiForMonitor(monitor, MDT_EFFECTIVE_DPI, &dpiX, &dpiY);
             return dpiX;
-        } else { // Win2K
+        } else { 
             HDC hdc = ::GetDC(nullptr);
             const int dpiX = ::GetDeviceCaps(hdc, LOGPIXELSX);
-            // const int dpiY = ::GetDeviceCaps(hdc, LOGPIXELSY);
+            
             ::ReleaseDC(nullptr, hdc);
             return quint32(dpiX);
         }
@@ -462,12 +462,12 @@ namespace QWK {
             return apis.pGetSystemMetricsForDpi(index, dpi);
         }
         const int result = ::GetSystemMetrics(index);
-        // GetSystemMetrics() always give you scaled value.
+        
         if (dpi != USER_DEFAULT_SCREEN_DPI) {
             return result;
         }
         const qreal dpr = qreal(dpi) / qreal(USER_DEFAULT_SCREEN_DPI);
-        // ### Not sure how Windows itself rounds non-integer value.
+        
         return qFloor(qreal(result) / dpr);
     }
 
@@ -482,27 +482,27 @@ namespace QWK {
         }
         if (isWin10OrGreater()) {
             const quint32 dpi = getDpiForWindow(hwnd);
-            // When DPI is 96, it should be 1px.
+            
             return getSystemMetricsForDpi(SM_CXBORDER, dpi);
         }
-        // There's no such thing (a visible frame border line) before Win10.
+        
         return 0;
     }
 
     inline quint32 getResizeBorderThickness(HWND hwnd) {
         const quint32 dpi = getDpiForWindow(hwnd);
-        // When DPI is 96, SM_CXSIZEFRAME is 4px, SM_CXPADDEDBORDER is also 4px,
-        // so the result should be 8px. This result won't be affected by OS version,
-        // it's 8px in Win7, and so in Win11.
+        
+        
+        
         return getSystemMetricsForDpi(SM_CXSIZEFRAME, dpi) +
                getSystemMetricsForDpi(SM_CXPADDEDBORDER, dpi);
     }
 
     inline quint32 getTitleBarHeight(HWND hwnd) {
         const quint32 dpi = getDpiForWindow(hwnd);
-        // When DPI is 96, SM_CYCAPTION is 23px, so the result should be 31px.
-        // However, according to latest MS design manual, the title bar height
-        // should be 32px, maybe there's some rounding issue.
+        
+        
+        
         return getSystemMetricsForDpi(SM_CYCAPTION, dpi) +
                getSystemMetricsForDpi(SM_CYSIZEFRAME, dpi) +
                getSystemMetricsForDpi(SM_CXPADDEDBORDER, dpi);
@@ -510,4 +510,4 @@ namespace QWK {
 
 }
 
-#endif // QWKWINDOWSEXTRA_P_H
+#endif 

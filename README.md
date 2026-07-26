@@ -278,8 +278,6 @@ See [examples](examples) for more demo use cases. The examples have no High DPI 
 #### Hot Switch
 - Once you have made the window frameless, it will not be able to switch back to the system frame again unless you destroy your window and recreate it with different settings.
 
-- Do not use `QWidget::setWindowFlags` to change the window flags after `windowAgent.setup()` is called. As a result, `QWK::WidgetWindowAgent` can not be setup on `QDockWidget`.
-
 #### Native Child Widget
 - If you are about to add a widget with `Qt::WA_NativeWindow` property enabled as a descendent of the frameless window, you should enable `Qt::WA_DontCreateNativeAncestors` of it in advance.
 
@@ -288,9 +286,9 @@ See [examples](examples) for more demo use cases. The examples have no High DPI 
 - If you set a maximized width or height, the window should not be maximized because you cannot get the correct window size through Qt APIs. You may workaround this by using system APIs such as `GetWindowRect` or `GetClientRect`. The root cause lies deep in Qt QPA implementations and currently we don't know how to fix it without modifying Qt itself.
 
 #### Windows 10
-- Due to the inherent defects in the Windows 10 window system, the top border will disappear when the system title bar is removed. We have filtered Qt's event and perfectly reshown the system top border, thanks to the implementation of Windows Terminal for our reference. However, this workaround only works with QtWidgets and QtQuick (**only when rendering through OpenGL/D3D11/D3D12, not Vulkan**) applications.
+- Due to the inherent defects in the Windows 10 window system, the top border will disappear when the system title bar is removed. We have filtered Qt's event and perfectly reshown the system top border, thanks to the implementation of Windows Terminal for our reference. However, this workaround only works with QtWidgets and QtQuick (**only when rendering through OpenGL/OpenGLES/D3D11/D3D12, not Vulkan**) applications.
 - For QtQuick applications, when rendering through Vulkan, the top border will become a solid black line, that's a known issue and currently we are not able to fix it. Please use QWK's borderless version if you can't change your graphics backend.
-- For QtQuick applications, when rendering through D3D11/D3D12, you may see a strange white line on window top, it may disappear if you resize the window. Currently it's a bug and we are working hard to find a suitable solution for it, for now you can set the environment variable `QT_QPA_DISABLE_REDIRECTION_SURFACE` to a non-zero value in your `main` function before any `QCoreApplication` instance is created to workaround this issue. This environment variable is first introduced in Qt 6.7.0 (qtbase/838fc606c170fac112f7bb5971c2507b7b56d08a). You must **NOT** enable this feature for OpenGL/Vulkan because their rendering will be totally broken.
+- For QtQuick applications, when rendering through D3D11/D3D12, you may see a strange white line on window top, it may disappear if you resize the window. Currently it's a bug and we are working hard to find a suitable solution for it, for now you can set the environment variable `QT_QPA_DISABLE_REDIRECTION_SURFACE` to a non-zero value in your `main` function before any `QCoreApplication` instance is created to workaround this issue. This environment variable is first introduced in Qt 6.7.0 (qtbase/838fc606c170fac112f7bb5971c2507b7b56d08a). You must **NOT** enable this feature for OpenGL/OpenGLES/Vulkan because their rendering will be totally broken.
 
 ## TODO
 

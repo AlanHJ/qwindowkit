@@ -1,6 +1,6 @@
-// Copyright (C) 2023-2024 Stdware Collections (https://www.github.com/stdware)
-// Copyright (C) 2021-2023 wangwenx190 (Yuhang Zhao)
-// SPDX-License-Identifier: Apache-2.0
+
+
+
 
 #ifndef QUICKWINDOWAGENT_H
 #define QUICKWINDOWAGENT_H
@@ -39,7 +39,7 @@ namespace QWK {
         Q_INVOKABLE void setHitTestVisible(QQuickItem *item, bool visible = true);
 
 #ifdef Q_OS_MAC
-        // The system button area APIs are experimental, very likely to change in the future.
+        
         Q_INVOKABLE QQuickItem *systemButtonArea() const;
         Q_INVOKABLE void setSystemButtonArea(QQuickItem *item);
 
@@ -57,4 +57,4 @@ namespace QWK {
 
 }
 
-#endif // QUICKWINDOWAGENT_H
+#endif 
