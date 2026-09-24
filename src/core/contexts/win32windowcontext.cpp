@@ -8,6 +8,7 @@
 
 #include <QtCore/QAbstractEventDispatcher>
 #include <QtCore/QDateTime>
+#include <QtCore/QDebug>
 #include <QtCore/QHash>
 #include <QtCore/QScopeGuard>
 #include <QtCore/QTimer>
@@ -70,7 +71,9 @@ namespace QWK {
     Q_GLOBAL_STATIC(WndProcHash, g_wndProcHash)
 
     
-    static WNDPROC g_qtWindowProc = nullptr;
+    
+    using OriginalWndProcHash = QHash<HWND, WNDPROC>;
+    Q_GLOBAL_STATIC(OriginalWndProcHash, g_originalWndProcs)
 
     static inline bool
 #if !QWINDOWKIT_CONFIG(ENABLE_WINDOWS_SYSTEM_BORDERS)
@@ -602,9 +605,17 @@ namespace QWK {
         }
 
         
+        
+        const WNDPROC originalProc = g_originalWndProcs->value(hWnd, nullptr);
+        const auto nativeDestroyCleanup = qScopeGuard([hWnd, message]() {
+            if (message == WM_NCDESTROY) {
+                g_originalWndProcs->remove(hWnd);
+            }
+        });
         auto ctx = g_wndProcHash->value(hWnd);
-        if (!ctx) {
-            return ::DefWindowProcW(hWnd, message, wParam, lParam);
+        if (!ctx || !originalProc) {
+            return originalProc ? ::CallWindowProcW(originalProc, hWnd, message, wParam, lParam)
+                                : ::DefWindowProcW(hWnd, message, wParam, lParam);
         }
 
         WindowsNativeEventFilter::lastMessageContext = ctx;
@@ -615,7 +626,7 @@ namespace QWK {
         
         
         if (message == WM_NCCALCSIZE) {
-            return ::CallWindowProcW(g_qtWindowProc, hWnd, message, wParam, lParam);
+            return ::CallWindowProcW(originalProc, hWnd, message, wParam, lParam);
         }
 
         
@@ -630,7 +641,7 @@ namespace QWK {
         }
 
         
-        return ::CallWindowProcW(g_qtWindowProc, hWnd, message, wParam, lParam);
+        return ::CallWindowProcW(originalProc, hWnd, message, wParam, lParam);
     }
 
     static inline void addManagedWindow(QWindow *window, HWND hWnd, Win32WindowContext *ctx) {
@@ -640,12 +651,36 @@ namespace QWK {
         }
 
         
-        if (!g_qtWindowProc) {
-            g_qtWindowProc = reinterpret_cast<WNDPROC>(::GetWindowLongPtrW(hWnd, GWLP_WNDPROC));
-        }
-
         
-        ::SetWindowLongPtrW(hWnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(QWKHookedWndProc));
+        if (!g_originalWndProcs->contains(hWnd)) {
+            ::SetLastError(ERROR_SUCCESS);
+            const auto previousProc = reinterpret_cast<WNDPROC>(::SetWindowLongPtrW(
+                hWnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(QWKHookedWndProc)));
+            if (!previousProc) {
+                qWarning() << "[QWK] Failed to install window procedure"
+                           << "| hwnd=" << quintptr(hWnd) << "| error=" << ::GetLastError();
+                return;
+            }
+            if (previousProc == QWKHookedWndProc) {
+                qWarning() << "[QWK] Missing original window procedure for existing hook"
+                           << "| hwnd=" << quintptr(hWnd);
+                return;
+            }
+            bool differsFromExistingWindow = false;
+            for (auto it = g_originalWndProcs->cbegin(); it != g_originalWndProcs->cend(); ++it) {
+                if (it.value() != previousProc) {
+                    differsFromExistingWindow = true;
+                    break;
+                }
+            }
+            g_originalWndProcs->insert(hWnd, previousProc);
+            qInfo() << "[QWK] Per-window procedure installed"
+                    << "| hwnd=" << quintptr(hWnd)
+                    << "| originalProc=" << quintptr(previousProc)
+                    << "| classProc=" << quintptr(::GetClassLongPtrW(hWnd, GCLP_WNDPROC))
+                    << "| surfaceType=" << (window ? int(window->surfaceType()) : -1)
+                    << "| differsFromExistingWindow=" << differsFromExistingWindow;
+        }
 
         
         WindowsNativeEventFilter::install();
@@ -663,6 +698,21 @@ namespace QWK {
         
         if (!g_wndProcHash->remove(hWnd))
             return;
+
+        const WNDPROC originalProc = g_originalWndProcs->value(hWnd, nullptr);
+        if (!::IsWindow(hWnd)) {
+            g_originalWndProcs->remove(hWnd);
+        } else if (originalProc && reinterpret_cast<WNDPROC>(
+                       ::GetWindowLongPtrW(hWnd, GWLP_WNDPROC)) == QWKHookedWndProc) {
+            
+            
+            if (::SetWindowLongPtrW(hWnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(originalProc))) {
+                g_originalWndProcs->remove(hWnd);
+            } else {
+                qWarning() << "[QWK] Failed to restore window procedure"
+                           << "| hwnd=" << quintptr(hWnd) << "| error=" << ::GetLastError();
+            }
+        }
 
         
         if (g_wndProcHash->empty()) {
